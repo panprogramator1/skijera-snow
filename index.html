@@ -28,6 +28,12 @@
     }
 
     * { box-sizing: border-box; }
+    * { scrollbar-width: thin; scrollbar-color: #68afe8 #eaf3fb; }
+    *::-webkit-scrollbar { width: 12px; height: 12px; }
+    *::-webkit-scrollbar-track { background: #eaf3fb; }
+    *::-webkit-scrollbar-thumb { background: linear-gradient(180deg,#79c6f5,#2479bd); border: 3px solid #eaf3fb; border-radius: 999px; }
+    *::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg,#3198dc,#145f9b); }
+    *::-webkit-scrollbar-corner { background: #eaf3fb; }
     html { scroll-behavior: smooth; scroll-padding-top: 100px; }
     body {
       margin: 0;
@@ -68,7 +74,11 @@
     .header-actions { display: flex; align-items: center; gap: 10px; }
     .iconbtn { border: 1px solid var(--line); background: linear-gradient(180deg,#fff,#f4f9ff); border-radius: 14px; padding: 10px 13px; color: var(--navy); box-shadow: 0 8px 16px rgba(17,36,52,.04); transition: .2s; }
     .iconbtn:hover { transform: translateY(-1px); box-shadow: 0 14px 26px rgba(17,36,52,.08); }
-    .cart-count { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; padding: 0 7px; background: linear-gradient(135deg,var(--blue),#0d5bc7); color: white; border-radius: 999px; font-size: 11px; font-weight: 850; margin-left: 5px; }
+    .cart-button { display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 8px 10px 8px 15px; border: 0; border-radius: 999px; background: linear-gradient(135deg,#167fe0,#075bb8); color: #fff; font-weight: 700; box-shadow: 0 8px 18px rgba(13,91,184,.24); }
+    .cart-button:hover { transform: translateY(-2px); background: linear-gradient(135deg,#238ce9,#064f9f); box-shadow: 0 12px 24px rgba(13,91,184,.32); }
+    .cart-button:focus-visible { outline: 3px solid rgba(22,144,255,.35); outline-offset: 3px; }
+    .cart-button svg { width: 19px; height: 19px; flex: none; }
+    .cart-count { display: inline-flex; align-items: center; justify-content: center; min-width: 27px; height: 27px; padding: 0 7px; background: #fff; color: #075bb8; border-radius: 999px; font-size: 12px; font-weight: 800; font-variant-numeric: tabular-nums; }
     .hero {
       position: relative; min-height: 535px; display: flex; align-items: center;
       background: linear-gradient(90deg,rgba(7,20,32,.84) 0%,rgba(7,20,32,.62) 42%,rgba(7,20,32,.16) 100%),
@@ -202,6 +212,9 @@
       nav { display: none; }
       .header-actions { gap: 7px; }
       .iconbtn { padding: 9px 10px; border-radius: 11px; font-size: 12px; }
+      .cart-button { min-height: 40px; gap: 7px; padding: 6px 7px 6px 11px; border-radius: 13px; }
+      .cart-button svg { width: 17px; height: 17px; }
+      .cart-count { min-width: 23px; height: 23px; padding: 0 5px; font-size: 11px; }
       .hero { min-height: 510px; padding: 55px 23px; background-position: 58% center; }
       .hero p { font-size: 15px; }
       .trust-row { gap: 10px 15px; }
@@ -251,8 +264,9 @@
     .topnote { text-transform: none; letter-spacing: 0; font-size: 13px; font-weight: 600; }
     .logo { font-size: 26px; font-weight: 800; letter-spacing: .04em; }
     nav { font-size: 15px; font-weight: 600; }
-    .hero { min-height: 600px; padding-bottom: 100px; }
-    .hero h1 { font-size: clamp(60px, 10vw, 128px); line-height: .88; letter-spacing: 0; font-weight: 800; margin: 0 0 22px; }
+    .hero { min-height: 600px; }
+    .hero h1 { font-size: clamp(52px, 8vw, 104px); line-height: .92; letter-spacing: 0; font-weight: 800; margin: 18px 0 18px; }
+    .hero h1:focus { outline: none; }
     @keyframes hero-text-reveal {
       from { opacity: 0; transform: translateY(28px); filter: blur(8px); }
       to { opacity: 1; transform: translateY(0); filter: blur(0); }
@@ -288,9 +302,12 @@
     .drawer-head h2, .modal-head h2 { font-size: 30px; }
     @media (max-width: 720px) {
       .logo { font-size: 21px; }
-      .hero { min-height: 540px; }
-      .hero h1 { font-size: clamp(52px, 13vw, 82px); }
-      .hero p { font-size: 16px; }
+      .hero { min-height: calc(100svh - 100px); padding: clamp(32px, 5vh, 52px) 23px; }
+      .hero h1 { font-size: clamp(42px, 9vw, 60px); line-height: .94; margin: 14px 0; }
+      .hero p { font-size: 15px; line-height: 1.5; }
+      .hero-actions { gap: 8px; margin-top: 16px; }
+      .hero-actions .btn { padding: 11px 13px; font-size: 14px; }
+      .hero .trust-row { display: none; }
       .product-image { height: 175px; }
       .product-info h3 { font-size: 19px; }
       .price { font-size: 21px; }
@@ -316,9 +333,12 @@
     }
     .welcome-screen { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 24px; overflow-y: auto; background: radial-gradient(ellipse at 50% 10%, #f8fcff 0, #e7f3fc 48%, #dceaf6 100%); }
     .welcome-screen[hidden] { display: none; }
-    .welcome-card { width: min(510px, 100%); text-align: center; }
+    .welcome-screen.is-transitioning .welcome-visual { display: none; }
+    .welcome-card { width: min(900px, 100%); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: clamp(30px, 6vw, 80px); text-align: left; }
+    .welcome-visual { grid-column: 1; grid-row: 1; }
+    #welcomeContent { grid-column: 2; grid-row: 1; }
     .welcome-transition[hidden] { display: none; }
-    .welcome-transition { display: grid; justify-items: center; gap: 22px; animation: welcome-arrive .55s cubic-bezier(.2,.7,.2,1) both; }
+    .welcome-transition { grid-column: 1 / -1; display: grid; justify-items: center; gap: 22px; animation: welcome-arrive .55s cubic-bezier(.2,.7,.2,1) both; }
     .loading-ring { width: 76px; height: 76px; border: 7px solid #c8dced; border-top-color: #2479bd; border-radius: 50%; animation: welcome-spin .9s linear infinite; }
     @keyframes welcome-spin { to { transform: rotate(360deg); } }
     @keyframes welcome-arrive { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -331,9 +351,9 @@
     @media (prefers-reduced-motion: reduce) {
       .welcome-transition, .welcome-transition h1, .loading-ring, .welcome-screen.is-leaving, #shopContent.shop-entering { animation: none !important; }
     }
-    .winter-hats { display: flex; align-items: end; justify-content: center; gap: clamp(8px, 4vw, 26px); margin: 0 auto 28px; }
-    .winter-hat { width: clamp(76px, 22vw, 112px); height: auto; overflow: visible; }
-    .winter-hat:nth-child(2) { width: clamp(88px, 25vw, 128px); }
+    .winter-hats { display: flex; align-items: end; justify-content: center; gap: clamp(8px, 2vw, 24px); margin: 0 auto; }
+    .winter-hat { width: clamp(88px, 12vw, 150px); height: auto; overflow: visible; }
+    .winter-hat:nth-child(2) { width: clamp(100px, 14vw, 170px); }
     .welcome-kicker { margin: 0 0 10px; color: #2479bd; font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
     .welcome-card h1 { margin: 0; color: var(--navy); font-size: clamp(34px, 8vw, 52px); line-height: 1.04; letter-spacing: -.045em; }
     .welcome-copy { margin: 13px 0 27px; color: var(--muted); font-size: 15px; line-height: 1.6; }
@@ -345,7 +365,10 @@
     .welcome-note { margin: 16px 0 0; color: #71849a; font-size: 11px; }
     @media (max-width: 720px) {
       .welcome-screen { padding: 20px; }
-      .winter-hats { margin-bottom: 24px; }
+      .welcome-card { width: min(510px, 100%); display: block; text-align: center; }
+      .winter-hat { width: clamp(76px, 22vw, 112px); }
+      .winter-hat:nth-child(2) { width: clamp(88px, 25vw, 128px); }
+      .winter-hats { gap: clamp(8px, 4vw, 26px); margin: 0 auto 24px; }
       .welcome-copy { margin-bottom: 22px; }
     }
     @media (prefers-reduced-motion: reduce) {
@@ -356,33 +379,35 @@
 <body>
   <section class="welcome-screen" id="welcomeScreen" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle" aria-describedby="welcomeDescription">
     <div class="welcome-card">
-      <div id="welcomeContent">
-      <div class="winter-hats" aria-hidden="true">
-        <svg class="winter-hat" viewBox="0 0 120 112">
-          <circle cx="60" cy="17" r="12" fill="#72c7f2"/>
-          <path d="M29 73c1-25 11-42 31-48 20 6 30 23 31 48H29Z" fill="#72c7f2"/>
-          <path d="M27 70h66v20a8 8 0 0 1-8 8H35a8 8 0 0 1-8-8V70Z" fill="#3b9fd3"/>
-          <path d="M39 44c7-9 14-13 21-15m21 15c-7-9-14-13-21-15" fill="none" stroke="#b8e7fb" stroke-width="3" stroke-linecap="round"/>
-          <circle cx="48" cy="79" r="6" fill="#fff"/><circle cx="72" cy="79" r="6" fill="#fff"/>
-          <g data-pupils><circle cx="49" cy="79" r="2.5" fill="#0b1d31"/><circle cx="73" cy="79" r="2.5" fill="#0b1d31"/></g>
-        </svg>
-        <svg class="winter-hat" viewBox="0 0 120 112">
-          <circle cx="60" cy="17" r="12" fill="#f1b8a8"/>
-          <path d="M29 73c1-25 11-42 31-48 20 6 30 23 31 48H29Z" fill="#f1b8a8"/>
-          <path d="M27 70h66v20a8 8 0 0 1-8 8H35a8 8 0 0 1-8-8V70Z" fill="#dc9584"/>
-          <path d="M60 32v34m-17-29 34 29m0-29L43 66" fill="none" stroke="#f9ddd5" stroke-width="3" stroke-linecap="round"/>
-          <circle cx="48" cy="79" r="6" fill="#fff"/><circle cx="72" cy="79" r="6" fill="#fff"/>
-          <g data-pupils><circle cx="49" cy="79" r="2.5" fill="#0b1d31"/><circle cx="73" cy="79" r="2.5" fill="#0b1d31"/></g>
-        </svg>
-        <svg class="winter-hat" viewBox="0 0 120 112">
-          <circle cx="60" cy="17" r="12" fill="#b8c9ed"/>
-          <path d="M29 73c1-25 11-42 31-48 20 6 30 23 31 48H29Z" fill="#b8c9ed"/>
-          <path d="M27 70h66v20a8 8 0 0 1-8 8H35a8 8 0 0 1-8-8V70Z" fill="#8fa6d4"/>
-          <path d="M38 56h44" stroke="#dce5f8" stroke-width="3" stroke-linecap="round"/>
-          <circle cx="48" cy="79" r="6" fill="#fff"/><circle cx="72" cy="79" r="6" fill="#fff"/>
-          <g data-pupils><circle cx="49" cy="79" r="2.5" fill="#0b1d31"/><circle cx="73" cy="79" r="2.5" fill="#0b1d31"/></g>
-        </svg>
+      <div class="welcome-visual">
+        <div class="winter-hats" aria-hidden="true">
+          <svg class="winter-hat" viewBox="0 0 120 112">
+            <circle cx="60" cy="17" r="12" fill="#72c7f2"/>
+            <path d="M29 73c1-25 11-42 31-48 20 6 30 23 31 48H29Z" fill="#72c7f2"/>
+            <path d="M27 70h66v20a8 8 0 0 1-8 8H35a8 8 0 0 1-8-8V70Z" fill="#3b9fd3"/>
+            <path d="M39 44c7-9 14-13 21-15m21 15c-7-9-14-13-21-15" fill="none" stroke="#b8e7fb" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="48" cy="79" r="6" fill="#fff"/><circle cx="72" cy="79" r="6" fill="#fff"/>
+            <g data-pupils><circle cx="49" cy="79" r="2.5" fill="#0b1d31"/><circle cx="73" cy="79" r="2.5" fill="#0b1d31"/></g>
+          </svg>
+          <svg class="winter-hat" viewBox="0 0 120 112">
+            <circle cx="60" cy="17" r="12" fill="#f1b8a8"/>
+            <path d="M29 73c1-25 11-42 31-48 20 6 30 23 31 48H29Z" fill="#f1b8a8"/>
+            <path d="M27 70h66v20a8 8 0 0 1-8 8H35a8 8 0 0 1-8-8V70Z" fill="#dc9584"/>
+            <path d="M60 32v34m-17-29 34 29m0-29L43 66" fill="none" stroke="#f9ddd5" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="48" cy="79" r="6" fill="#fff"/><circle cx="72" cy="79" r="6" fill="#fff"/>
+            <g data-pupils><circle cx="49" cy="79" r="2.5" fill="#0b1d31"/><circle cx="73" cy="79" r="2.5" fill="#0b1d31"/></g>
+          </svg>
+          <svg class="winter-hat" viewBox="0 0 120 112">
+            <circle cx="60" cy="17" r="12" fill="#b8c9ed"/>
+            <path d="M29 73c1-25 11-42 31-48 20 6 30 23 31 48H29Z" fill="#b8c9ed"/>
+            <path d="M27 70h66v20a8 8 0 0 1-8 8H35a8 8 0 0 1-8-8V70Z" fill="#8fa6d4"/>
+            <path d="M38 56h44" stroke="#dce5f8" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="48" cy="79" r="6" fill="#fff"/><circle cx="72" cy="79" r="6" fill="#fff"/>
+            <g data-pupils><circle cx="49" cy="79" r="2.5" fill="#0b1d31"/><circle cx="73" cy="79" r="2.5" fill="#0b1d31"/></g>
+          </svg>
+        </div>
       </div>
+      <div id="welcomeContent">
       <p class="welcome-kicker">SKIJERA SNOW</p>
       <h1 id="welcomeTitle">The mountains are calling.</h1>
       <p class="welcome-copy" id="welcomeDescription">Choose a nickname before you head for the slopes.</p>
@@ -400,7 +425,7 @@
     </div>
   </section>
   <div id="shopContent" inert aria-hidden="true">
-  <div class="topnote">❄ Winter is here · Free shipping on orders over CZK 2,500</div>
+  <div class="topnote">❄ Winter is here · Free shipping on orders over CZK 2 500</div>
   <header>
     <div class="brand-search">
       <a class="logo" href="#domu" aria-label="SKIJERA SNOW – home"><span class="mountain">▲</span> SKIJERA <span style="color:var(--blue)">SNOW</span></a>
@@ -413,7 +438,10 @@
     </nav>
     <div class="header-actions">
       <button class="iconbtn" id="searchJump" aria-label="Go to search">⌕ Search</button>
-      <button class="iconbtn" id="openCart" aria-label="Open shopping cart">🛒 Cart <span class="cart-count" id="cartCount">0</span></button>
+      <button class="iconbtn cart-button" id="openCart" type="button" aria-label="Open shopping cart, 0 items">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 1.9-1.4L22 8H6"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+        <span>Cart</span><span class="cart-count" id="cartCount" aria-hidden="true">0</span>
+      </button>
     </div>
   </header>
 
@@ -431,7 +459,7 @@
   </section>
 
   <section class="benefits" id="vyhody" aria-label="Shopping benefits">
-    <div class="benefit"><div class="benefit-icon">🚚</div><div><strong>Free shipping over CZK 2,500</strong><small>To your door or a pickup point</small></div></div>
+    <div class="benefit"><div class="benefit-icon">🚚</div><div><strong>Free shipping over CZK 2 500</strong><small>To your door or a pickup point</small></div></div>
     <div class="benefit"><div class="benefit-icon">❄️</div><div><strong>Gear for every kind of weather</strong><small>Layers, accessories and equipment</small></div></div>
     <div class="benefit"><div class="benefit-icon">↩️</div><div><strong>14 days to change your mind</strong><small>Easy returns, subject to our policy</small></div></div>
   </section>
@@ -450,7 +478,7 @@
       </div>
       <div class="filters">
         <div class="field search-field"><label for="searchInput">Search products</label><input id="searchInput" type="search" placeholder="e.g. helmet, jacket, skis…" autocomplete="off"></div>
-        <div class="field"><label for="maxPrice">Maximum price</label><select id="maxPrice"><option value="999999">Any price</option><option value="1000">Up to CZK 1,000</option><option value="2000">Up to CZK 2,000</option><option value="4000">Up to CZK 4,000</option><option value="7000">Up to CZK 7,000</option></select></div>
+        <div class="field"><label for="maxPrice">Maximum price</label><select id="maxPrice"><option value="999999">Any price</option><option value="1000">Up to CZK 1 000</option><option value="2000">Up to CZK 2 000</option><option value="4000">Up to CZK 4 000</option><option value="7000">Up to CZK 7 000</option></select></div>
         <div class="field"><label for="sortProducts">Sort by</label><select id="sortProducts"><option value="featured">Featured</option><option value="price-asc">Price: low to high</option><option value="price-desc">Price: high to low</option><option value="name">Name: A–Z</option></select></div>
         <div class="reset-field"><button class="btn dark small" id="resetFilters">Clear filters</button></div>
       </div>
@@ -560,7 +588,7 @@
     let toastTimer;
 
     const $ = (selector) => document.querySelector(selector);
-    const money = (value) => new Intl.NumberFormat("en-GB", {style:"currency",currency:"CZK",maximumFractionDigits:0}).format(value);
+    const money = (value) => `CZK ${new Intl.NumberFormat("en-GB", {maximumFractionDigits:0}).format(value).replace(/,/g, " ")}`;
     const cartQuantity = () => [...cart.values()].reduce((sum, item) => sum + item.qty, 0);
     const subtotalValue = () => [...cart.values()].reduce((sum, item) => sum + item.product.price * item.qty, 0);
     const shippingValue = () => subtotalValue() === 0 || subtotalValue() >= 2500 ? 0 : 99;
@@ -607,6 +635,7 @@
       const subtotal = subtotalValue();
       const shipping = shippingValue();
       $("#cartCount").textContent = count;
+      $("#openCart").setAttribute("aria-label", `Open shopping cart, ${count} ${count === 1 ? "item" : "items"}`);
       $("#cartHeadingCount").textContent = count === 1 ? "(1 item)" : `(${count} items)`;
       $("#subtotal").textContent = money(subtotal);
       $("#shippingCost").textContent = subtotal === 0 ? "—" : shipping === 0 ? "Free" : money(shipping);
@@ -782,6 +811,7 @@
       $("#welcomeContent").hidden = true;
       $("#welcomeGreeting").textContent = `Hello, ${nickname}!`;
       $("#welcomeTransition").hidden = false;
+      welcomeScreen.classList.add("is-transitioning");
       welcomeScreen.setAttribute("aria-labelledby", "welcomeGreeting");
       welcomeScreen.removeAttribute("aria-describedby");
       window.setTimeout(() => {
