@@ -253,6 +253,15 @@
     nav { font-size: 15px; font-weight: 600; }
     .hero { min-height: 600px; padding-bottom: 100px; }
     .hero h1 { font-size: clamp(60px, 10vw, 128px); line-height: .88; letter-spacing: 0; font-weight: 800; margin: 0 0 22px; }
+    @keyframes hero-text-reveal {
+      from { opacity: 0; transform: translateY(28px); filter: blur(8px); }
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+    .hero h1 span { display: block; animation: hero-text-reveal .8s cubic-bezier(.2,.7,.2,1) both; }
+    .hero h1 span + span { animation-delay: .16s; }
+    @media (prefers-reduced-motion: reduce) {
+      .hero h1 span { animation: none; }
+    }
     .hero p { font-size: 18px; }
     .hero .btn:not(.light) { background: var(--signal); }
     .hero .btn:not(.light):hover { background: #bf3507; }
@@ -291,12 +300,112 @@
       .product-image { height: 145px; }
       .price { font-size: 18px; }
     }
+    .brand-search { position: relative; display: flex; align-items: center; flex: 0 0 270px; height: 48px; }
+    .brand-search .logo { position: absolute; inset: 0 auto 0 0; transition: opacity .18s ease; }
+    .brand-search-input { position: absolute; inset: auto 0 0; width: 0; height: 42px; padding: 0; border: 0; border-bottom: 2px solid var(--blue); outline: none; background: transparent; color: var(--navy); font: 500 16px "Space Grotesk", sans-serif; opacity: 0; transition: width .24s ease, opacity .18s ease; }
+    .brand-search-input:focus-visible { outline: none; }
+    @media (min-width: 721px) and (hover: hover) and (pointer: fine) {
+      .brand-search:hover .logo, .brand-search:focus-within .logo { opacity: 0; pointer-events: none; }
+      .brand-search:hover .brand-search-input, .brand-search:focus-within .brand-search-input { width: 270px; opacity: 1; }
+      #searchJump { display: none; }
+    }
+    @media (max-width: 720px) {
+      .brand-search { flex: 0 0 auto; width: auto; height: auto; }
+      .brand-search .logo { position: static; }
+      .brand-search-input { display: none; }
+    }
+    .welcome-screen { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 24px; overflow-y: auto; background: radial-gradient(ellipse at 50% 10%, #f8fcff 0, #e7f3fc 48%, #dceaf6 100%); }
+    .welcome-screen[hidden] { display: none; }
+    .welcome-card { width: min(510px, 100%); text-align: center; }
+    .welcome-transition[hidden] { display: none; }
+    .welcome-transition { display: grid; justify-items: center; gap: 22px; animation: welcome-arrive .55s cubic-bezier(.2,.7,.2,1) both; }
+    .loading-ring { width: 76px; height: 76px; border: 7px solid #c8dced; border-top-color: #2479bd; border-radius: 50%; animation: welcome-spin .9s linear infinite; }
+    @keyframes welcome-spin { to { transform: rotate(360deg); } }
+    @keyframes welcome-arrive { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .welcome-transition h1 { margin: 0; color: var(--navy); font-size: clamp(30px, 7vw, 44px); line-height: 1.1; overflow-wrap: anywhere; animation: greeting-arrive .55s .12s ease both; }
+    @keyframes greeting-arrive { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .welcome-screen.is-leaving { animation: welcome-exit .42s ease forwards; pointer-events: none; }
+    @keyframes welcome-exit { to { opacity: 0; } }
+    #shopContent.shop-entering { animation: shop-enter .55s ease both; }
+    @keyframes shop-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) {
+      .welcome-transition, .welcome-transition h1, .loading-ring, .welcome-screen.is-leaving, #shopContent.shop-entering { animation: none !important; }
+    }
+    .winter-hats { display: flex; align-items: end; justify-content: center; gap: clamp(8px, 4vw, 26px); margin: 0 auto 28px; }
+    .winter-hat { width: clamp(76px, 22vw, 112px); height: auto; overflow: visible; }
+    .winter-hat:nth-child(2) { width: clamp(88px, 25vw, 128px); }
+    .welcome-kicker { margin: 0 0 10px; color: #2479bd; font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+    .welcome-card h1 { margin: 0; color: var(--navy); font-size: clamp(34px, 8vw, 52px); line-height: 1.04; letter-spacing: -.045em; }
+    .welcome-copy { margin: 13px 0 27px; color: var(--muted); font-size: 15px; line-height: 1.6; }
+    .nickname-form { display: grid; gap: 12px; text-align: left; }
+    .nickname-form label { color: var(--navy); font-size: 13px; font-weight: 600; }
+    .nickname-form input { width: 100%; height: 52px; padding: 0 15px; border: 1px solid #c8d9e8; border-radius: 13px; background: rgba(255,255,255,.88); color: var(--navy); font: 500 16px "Space Grotesk", sans-serif; }
+    .nickname-form input:focus { border-color: var(--blue); outline: 3px solid rgba(22,144,255,.18); }
+    .nickname-form .btn { width: 100%; min-height: 52px; background: var(--navy); box-shadow: 0 12px 24px rgba(11,29,49,.16); }
+    .welcome-note { margin: 16px 0 0; color: #71849a; font-size: 11px; }
+    @media (max-width: 720px) {
+      .welcome-screen { padding: 20px; }
+      .winter-hats { margin-bottom: 24px; }
+      .welcome-copy { margin-bottom: 22px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .winter-hat [data-pupils] { transform: none !important; }
+    }
   </style>
 </head>
 <body>
+  <section class="welcome-screen" id="welcomeScreen" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle" aria-describedby="welcomeDescription">
+    <div class="welcome-card">
+      <div id="welcomeContent">
+      <div class="winter-hats" aria-hidden="true">
+        <svg class="winter-hat" viewBox="0 0 120 112">
+          <circle cx="60" cy="17" r="12" fill="#72c7f2"/>
+          <path d="M29 73c1-25 11-42 31-48 20 6 30 23 31 48H29Z" fill="#72c7f2"/>
+          <path d="M27 70h66v20a8 8 0 0 1-8 8H35a8 8 0 0 1-8-8V70Z" fill="#3b9fd3"/>
+          <path d="M39 44c7-9 14-13 21-15m21 15c-7-9-14-13-21-15" fill="none" stroke="#b8e7fb" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="48" cy="79" r="6" fill="#fff"/><circle cx="72" cy="79" r="6" fill="#fff"/>
+          <g data-pupils><circle cx="49" cy="79" r="2.5" fill="#0b1d31"/><circle cx="73" cy="79" r="2.5" fill="#0b1d31"/></g>
+        </svg>
+        <svg class="winter-hat" viewBox="0 0 120 112">
+          <circle cx="60" cy="17" r="12" fill="#f1b8a8"/>
+          <path d="M29 73c1-25 11-42 31-48 20 6 30 23 31 48H29Z" fill="#f1b8a8"/>
+          <path d="M27 70h66v20a8 8 0 0 1-8 8H35a8 8 0 0 1-8-8V70Z" fill="#dc9584"/>
+          <path d="M60 32v34m-17-29 34 29m0-29L43 66" fill="none" stroke="#f9ddd5" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="48" cy="79" r="6" fill="#fff"/><circle cx="72" cy="79" r="6" fill="#fff"/>
+          <g data-pupils><circle cx="49" cy="79" r="2.5" fill="#0b1d31"/><circle cx="73" cy="79" r="2.5" fill="#0b1d31"/></g>
+        </svg>
+        <svg class="winter-hat" viewBox="0 0 120 112">
+          <circle cx="60" cy="17" r="12" fill="#b8c9ed"/>
+          <path d="M29 73c1-25 11-42 31-48 20 6 30 23 31 48H29Z" fill="#b8c9ed"/>
+          <path d="M27 70h66v20a8 8 0 0 1-8 8H35a8 8 0 0 1-8-8V70Z" fill="#8fa6d4"/>
+          <path d="M38 56h44" stroke="#dce5f8" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="48" cy="79" r="6" fill="#fff"/><circle cx="72" cy="79" r="6" fill="#fff"/>
+          <g data-pupils><circle cx="49" cy="79" r="2.5" fill="#0b1d31"/><circle cx="73" cy="79" r="2.5" fill="#0b1d31"/></g>
+        </svg>
+      </div>
+      <p class="welcome-kicker">SKIJERA SNOW</p>
+      <h1 id="welcomeTitle">The mountains are calling.</h1>
+      <p class="welcome-copy" id="welcomeDescription">Choose a nickname before you head for the slopes.</p>
+      <form class="nickname-form" id="nicknameForm">
+        <label for="nicknameInput">Your nickname</label>
+        <input id="nicknameInput" name="nickname" type="text" maxlength="24" placeholder="e.g. Snowfox" autocomplete="nickname" required>
+        <button class="btn" type="submit">Continue <span aria-hidden="true">→</span></button>
+      </form>
+      <p class="welcome-note">No account needed — just pick a name for this visit.</p>
+      </div>
+      <div class="welcome-transition" id="welcomeTransition" hidden role="status" aria-live="polite" aria-atomic="true">
+        <div class="loading-ring" aria-hidden="true"></div>
+        <h1 id="welcomeGreeting"></h1>
+      </div>
+    </div>
+  </section>
+  <div id="shopContent" inert aria-hidden="true">
   <div class="topnote">❄ Winter is here · Free shipping on orders over CZK 2,500</div>
   <header>
-    <a class="logo" href="#domu" aria-label="SKIJERA SNOW – home"><span class="mountain">▲</span> SKIJERA <span style="color:var(--blue)">SNOW</span></a>
+    <div class="brand-search">
+      <a class="logo" href="#domu" aria-label="SKIJERA SNOW – home"><span class="mountain">▲</span> SKIJERA <span style="color:var(--blue)">SNOW</span></a>
+      <input class="brand-search-input" id="brandSearchInput" type="search" placeholder="Search products…" aria-label="Search products" autocomplete="off">
+    </div>
     <nav aria-label="Main navigation">
       <a href="#produkty">Gear</a>
       <a href="#vyhody">Why us</a>
@@ -311,7 +420,7 @@
   <section class="hero" id="domu">
     <div class="hero-content">
       <span class="eyebrow">Gear for winter adventures</span>
-      <h1>The mountains are calling.<br>Be ready.</h1>
+      <h1 tabindex="-1"><span>The mountains are calling.</span><span>Be ready.</span></h1>
       <p>Find gear you can count on, from your first turn on groomed runs to fresh powder off-piste.</p>
       <div class="hero-actions">
         <a class="btn" href="#produkty">Explore the gear <span aria-hidden="true">→</span></a>
@@ -426,6 +535,7 @@
     </div>
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
 
   <script>
     "use strict";
@@ -438,7 +548,11 @@
       {id:5,name:"Polar Ice Goggles",category:"Accessories",price:990,oldPrice:1190,tag:"Great value",image:"https://images.pexels.com/photos/36548332/pexels-photo-36548332/free-photo-of-close-up-of-ski-goggles-reflecting-skiers-in-action.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"🥽",description:"A wide field of vision and a comfortable strap."},
       {id:6,name:"Frost Gloves",category:"Clothing",price:790,oldPrice:0,tag:"Fan favourite",image:"https://images.pexels.com/photos/19944283/pexels-photo-19944283/free-photo-of-hand-in-glove-on-snow.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"🧤",description:"Warm gloves for long days on the slopes."},
       {id:7,name:"Trek Ski Poles",category:"Skis",price:690,oldPrice:0,tag:"Lightweight",image:"https://images.pexels.com/photos/10692417/pexels-photo-10692417.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"🥢",description:"Durable poles with a comfortable grip."},
-      {id:8,name:"Base Thermal Layer",category:"Clothing",price:1190,oldPrice:1390,tag:"Comfort",image:"https://images.pexels.com/photos/6699207/pexels-photo-6699207.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"🧣",description:"A breathable base layer for active days."}
+      {id:8,name:"Base Thermal Layer",category:"Clothing",price:1190,oldPrice:1390,tag:"Comfort",image:"https://images.pexels.com/photos/6699207/pexels-photo-6699207.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"🧣",description:"A breathable base layer for active days."},
+      {id:9,name:"Powder Snowboard Boots",category:"Snowboard",price:2790,oldPrice:0,tag:"All-day comfort",image:"https://images.pexels.com/photos/2071654/pexels-photo-2071654.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"🥾",description:"Supportive, warm boots with a secure fit for long days on the board."},
+      {id:10,name:"Stormline Ski Pants",category:"Clothing",price:2490,oldPrice:2890,tag:"Weather-ready",image:"https://images.pexels.com/photos/36084981/pexels-photo-36084981/free-photo-of-ski-enthusiast-in-white-jacket-on-snowy-slope.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"👖",description:"Water-resistant insulated pants made for cold, snowy conditions."},
+      {id:11,name:"Mountain Daypack",category:"Accessories",price:1890,oldPrice:0,tag:"Trail essential",image:"https://images.pexels.com/photos/37685895/pexels-photo-37685895/free-photo-of-ski-enthusiast-in-winter-mountain-scene.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"🎒",description:"A compact, comfortable pack for carrying your mountain essentials."},
+      {id:12,name:"Merino Neck Warmer",category:"Clothing",price:590,oldPrice:0,tag:"Soft warmth",image:"https://images.pexels.com/photos/6699207/pexels-photo-6699207.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"🧣",description:"A soft, breathable neck warmer that adds cozy coverage on cold days."}
     ];
 
     const cart = new Map();
@@ -602,6 +716,24 @@
       $("#produkty").scrollIntoView({behavior:"smooth"});
       setTimeout(() => $("#searchInput").focus(),350);
     });
+    $("#brandSearchInput").addEventListener("input",event => {
+      $("#searchInput").value = event.target.value;
+      renderProducts();
+    });
+    $("#brandSearchInput").addEventListener("keydown",event => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        $("#produkty").scrollIntoView({behavior:"smooth"});
+        $("#searchInput").value = event.currentTarget.value;
+        renderProducts();
+      }
+      if (event.key === "Escape") {
+        event.currentTarget.value = "";
+        $("#searchInput").value = "";
+        renderProducts();
+        event.currentTarget.blur();
+      }
+    });
     $("#openCart").addEventListener("click",openCart);
     $("#closeCart").addEventListener("click",closeCart);
     $("#overlay").addEventListener("click",closeCart);
@@ -637,6 +769,51 @@
     $("#year").textContent = new Date().getFullYear();
     renderProducts();
     renderCart();
+
+    const welcomeScreen = $("#welcomeScreen");
+    const shopContent = $("#shopContent");
+    const nicknameInput = $("#nicknameInput");
+    nicknameInput.addEventListener("input", () => nicknameInput.setCustomValidity(""));
+    $("#nicknameForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const nickname = nicknameInput.value.trim();
+      nicknameInput.setCustomValidity(nickname ? "" : "Please enter a nickname.");
+      if (!event.currentTarget.reportValidity()) return;
+      $("#welcomeContent").hidden = true;
+      $("#welcomeGreeting").textContent = `Hello, ${nickname}!`;
+      $("#welcomeTransition").hidden = false;
+      welcomeScreen.setAttribute("aria-labelledby", "welcomeGreeting");
+      welcomeScreen.removeAttribute("aria-describedby");
+      window.setTimeout(() => {
+        welcomeScreen.classList.add("is-leaving");
+        shopContent.inert = false;
+        shopContent.setAttribute("aria-hidden", "false");
+        shopContent.classList.add("shop-entering");
+        window.setTimeout(() => {
+          welcomeScreen.hidden = true;
+          welcomeScreen.classList.remove("is-leaving");
+          shopContent.classList.remove("shop-entering");
+          document.body.style.overflow = "";
+          document.querySelector(".hero h1").focus({preventScroll:true});
+        }, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 420);
+      }, 1800);
+    });
+
+    const pointerAvailable = matchMedia("(min-width: 721px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+    if (pointerAvailable.matches) {
+      const pupils = document.querySelectorAll(".winter-hat [data-pupils]");
+      document.addEventListener("pointermove", event => {
+        pupils.forEach(group => {
+          const rect = group.parentElement.getBoundingClientRect();
+          const x = (event.clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
+          const y = (event.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
+          group.setAttribute("transform", `translate(${Math.max(-3, Math.min(3, x * 3))} ${Math.max(-3, Math.min(3, y * 3))})`);
+        });
+      });
+    }
+    if (matchMedia("(min-width: 721px) and (hover: hover) and (pointer: fine)").matches) {
+      $("#nicknameInput").focus();
+    }
   </script>
 </body>
 </html>
