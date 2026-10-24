@@ -358,10 +358,15 @@
     .welcome-card h1 { margin: 0; color: var(--navy); font-size: clamp(34px, 8vw, 52px); line-height: 1.04; letter-spacing: -.045em; }
     .welcome-copy { margin: 13px 0 27px; color: var(--muted); font-size: 15px; line-height: 1.6; }
     .nickname-form { display: grid; gap: 12px; text-align: left; }
+    .nickname-form[hidden] { display: none; }
     .nickname-form label { color: var(--navy); font-size: 13px; font-weight: 600; }
     .nickname-form input { width: 100%; height: 52px; padding: 0 15px; border: 1px solid #c8d9e8; border-radius: 13px; background: rgba(255,255,255,.88); color: var(--navy); font: 500 16px "Space Grotesk", sans-serif; }
     .nickname-form input:focus { border-color: var(--blue); outline: 3px solid rgba(22,144,255,.18); }
     .nickname-form .btn { width: 100%; min-height: 52px; background: var(--navy); box-shadow: 0 12px 24px rgba(11,29,49,.16); }
+    .nickname-status { min-height: 20px; margin: 0; color: #276b43; font-size: 13px; line-height: 1.45; }
+    .nickname-status[data-state="error"] { color: #a83232; }
+    .password-note { margin: 0; color: #71849a; font-size: 12px; line-height: 1.5; }
+    .nickname-change { justify-self: start; border: 0; padding: 0; background: transparent; color: #2479bd; font-size: 13px; text-decoration: underline; }
     .welcome-note { margin: 16px 0 0; color: #71849a; font-size: 11px; }
     @media (max-width: 720px) {
       .welcome-screen { padding: 20px; }
@@ -373,6 +378,9 @@
     }
     @media (prefers-reduced-motion: reduce) {
       .winter-hat [data-pupils] { transform: none !important; }
+    }
+    @media (hover: none) and (pointer: coarse) {
+      .welcome-screen.password-active .winter-hat [data-pupils] { transform: translate(0, -3px) !important; }
     }
   </style>
 </head>
@@ -414,9 +422,17 @@
       <form class="nickname-form" id="nicknameForm">
         <label for="nicknameInput">Your nickname</label>
         <input id="nicknameInput" name="nickname" type="text" maxlength="24" placeholder="e.g. Snowfox" autocomplete="nickname" required>
-        <button class="btn" type="submit">Continue <span aria-hidden="true">→</span></button>
+        <button class="btn" type="submit">Check nickname</button>
+        <p class="nickname-status" id="nicknameStatus" role="status" aria-live="polite"></p>
       </form>
-      <p class="welcome-note">No account needed — just pick a name for this visit.</p>
+      <form class="nickname-form" id="passwordForm" hidden>
+        <label for="passwordInput">Password</label>
+        <input id="passwordInput" name="password" type="password" minlength="1" autocomplete="new-password" placeholder="Enter password" required>
+        <p class="password-note">Password sign-in works on this device only. Accounts do not sync to other devices.</p>
+        <button class="btn" id="passwordSubmit" type="submit">Create account <span aria-hidden="true">→</span></button>
+        <button class="nickname-change" id="changeNickname" type="button">Use a different nickname</button>
+      </form>
+      <p class="welcome-note">Accounts are saved on this device only.</p>
       </div>
       <div class="welcome-transition" id="welcomeTransition" hidden role="status" aria-live="polite" aria-atomic="true">
         <div class="loading-ring" aria-hidden="true"></div>
@@ -580,7 +596,13 @@
       {id:9,name:"Powder Snowboard Boots",category:"Snowboard",price:2790,oldPrice:0,tag:"All-day comfort",image:"https://images.pexels.com/photos/2071654/pexels-photo-2071654.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"🥾",description:"Supportive, warm boots with a secure fit for long days on the board."},
       {id:10,name:"Stormline Ski Pants",category:"Clothing",price:2490,oldPrice:2890,tag:"Weather-ready",image:"https://images.pexels.com/photos/36084981/pexels-photo-36084981/free-photo-of-ski-enthusiast-in-white-jacket-on-snowy-slope.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"👖",description:"Water-resistant insulated pants made for cold, snowy conditions."},
       {id:11,name:"Mountain Daypack",category:"Accessories",price:1890,oldPrice:0,tag:"Trail essential",image:"https://images.pexels.com/photos/37685895/pexels-photo-37685895/free-photo-of-ski-enthusiast-in-winter-mountain-scene.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"🎒",description:"A compact, comfortable pack for carrying your mountain essentials."},
-      {id:12,name:"Merino Neck Warmer",category:"Clothing",price:590,oldPrice:0,tag:"Soft warmth",image:"https://images.pexels.com/photos/6699207/pexels-photo-6699207.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"🧣",description:"A soft, breathable neck warmer that adds cozy coverage on cold days."}
+      {id:12,name:"Merino Neck Warmer",category:"Clothing",price:590,oldPrice:0,tag:"Soft warmth",image:"https://images.pexels.com/photos/6699207/pexels-photo-6699207.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"🧣",description:"A soft, breathable neck warmer that adds cozy coverage on cold days."},
+      {id:13,name:"Alpine Carve 76 Skis",category:"Skis",price:5490,oldPrice:0,tag:"Easy turning",image:"https://images.pexels.com/photos/10692420/pexels-photo-10692420.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"🎿",description:"Responsive piste skis designed for smooth, controlled turns."},
+      {id:14,name:"Ridge Snowboard Gloves",category:"Clothing",price:1090,oldPrice:0,tag:"Warm & dry",image:"https://images.pexels.com/photos/19944283/pexels-photo-19944283/free-photo-of-hand-in-glove-on-snow.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"🧤",description:"Insulated gloves with a grippy palm for cold days on the mountain."},
+      {id:15,name:"Glacier Lens Goggles",category:"Accessories",price:1690,oldPrice:1890,tag:"Clear vision",image:"https://images.pexels.com/photos/36548332/pexels-photo-36548332/free-photo-of-close-up-of-ski-goggles-reflecting-skiers-in-action.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"🥽",description:"Wide-vision goggles with a comfortable fit for changing conditions."},
+      {id:16,name:"Summit Fleece Midlayer",category:"Clothing",price:1790,oldPrice:0,tag:"Layer up",image:"https://images.pexels.com/photos/6699207/pexels-photo-6699207.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"🧥",description:"A lightweight insulating layer for warmth without extra bulk."},
+      {id:17,name:"GoPro Action Camera",category:"Accessories",price:8990,oldPrice:0,tag:"Capture the ride",image:"https://images.pexels.com/photos/163077/mario-camera-olympus-pen-camera-163077.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"📷",description:"A compact action camera for capturing point-of-view footage on the slopes."},
+      {id:18,name:"DJI Mavic Cine Drone",category:"Accessories",price:24990,oldPrice:0,tag:"Cinematic views",image:"https://images.pexels.com/photos/336232/pexels-photo-336232.jpeg?auto=compress&cs=tinysrgb&w=900",emoji:"🚁",description:"A foldable camera drone for smooth aerial films of mountain adventures."}
     ];
 
     const cart = new Map();
@@ -802,12 +824,145 @@
     const welcomeScreen = $("#welcomeScreen");
     const shopContent = $("#shopContent");
     const nicknameInput = $("#nicknameInput");
+    const nicknameStatus = $("#nicknameStatus");
+    const passwordInput = $("#passwordInput");
+    const nicknameRegistryKey = "skijera-local-accounts";
+    const savedNicknameKey = "skijera-last-nickname";
+    let accountMode = "register";
+    const isTypingPassword = () => document.activeElement === passwordInput && passwordInput.value.length > 0;
+    try {
+      nicknameInput.value = localStorage.getItem(savedNicknameKey) || "";
+    } catch {
+      nicknameStatus.textContent = "Browser storage is unavailable, so nickname checking may not work.";
+      nicknameStatus.dataset.state = "error";
+    }
     nicknameInput.addEventListener("input", () => nicknameInput.setCustomValidity(""));
     $("#nicknameForm").addEventListener("submit", event => {
       event.preventDefault();
       const nickname = nicknameInput.value.trim();
       nicknameInput.setCustomValidity(nickname ? "" : "Please enter a nickname.");
       if (!event.currentTarget.reportValidity()) return;
+      let accounts;
+      try {
+        accounts = JSON.parse(localStorage.getItem(nicknameRegistryKey) || "{}");
+        if (Array.isArray(accounts)) {
+          accounts = Object.fromEntries(accounts.map(name => [name.toLocaleLowerCase("en"), null]));
+        }
+        if (!accounts || Array.isArray(accounts) || typeof accounts !== "object") {
+          throw new Error("Invalid local account list");
+        }
+      } catch {
+        nicknameStatus.textContent = "Could not check saved nicknames in this browser.";
+        nicknameStatus.dataset.state = "error";
+        return;
+      }
+      const normalizedNickname = nickname.toLocaleLowerCase("en");
+      const existingAccount = accounts[normalizedNickname];
+      if (existingAccount && typeof existingAccount.salt === "string" && typeof existingAccount.passwordHash === "string") {
+        accountMode = "login";
+        nicknameStatus.textContent = `"${nickname}" is already taken on this device. Enter your password to sign in.`;
+        nicknameStatus.dataset.state = "error";
+        $("#passwordInput").autocomplete = "current-password";
+        $("#passwordSubmit").innerHTML = "Sign in <span aria-hidden=\"true\">→</span>";
+      } else {
+        accountMode = "register";
+        nicknameStatus.textContent = existingAccount === null
+          ? `"${nickname}" was used here before. Create a password to set up this device.`
+          : `"${nickname}" is available on this device. Create a password to continue.`;
+        nicknameStatus.dataset.state = "available";
+        $("#passwordInput").autocomplete = "new-password";
+        $("#passwordSubmit").innerHTML = "Create account <span aria-hidden=\"true\">→</span>";
+      }
+      nicknameInput.value = nickname;
+      nicknameInput.readOnly = true;
+      event.currentTarget.querySelector("button[type=submit]").hidden = true;
+      $("#passwordForm").hidden = false;
+      passwordInput.value = "";
+      passwordInput.focus();
+    });
+    $("#changeNickname").addEventListener("click", () => {
+      $("#passwordForm").hidden = true;
+      const nicknameForm = $("#nicknameForm");
+      nicknameInput.readOnly = false;
+      nicknameInput.value = "";
+      nicknameInput.focus();
+      nicknameForm.querySelector("button[type=submit]").hidden = false;
+      nicknameStatus.textContent = "";
+      delete nicknameStatus.dataset.state;
+      passwordInput.value = "";
+      $("#passwordInput").autocomplete = "new-password";
+      $("#passwordSubmit").innerHTML = "Create account <span aria-hidden=\"true\">→</span>";
+    });
+    document.addEventListener("focusin", event => {
+      if (event.target === passwordInput) welcomeScreen.classList.toggle("password-active", isTypingPassword());
+    });
+    document.addEventListener("focusout", event => {
+      if (event.target !== passwordInput) return;
+      welcomeScreen.classList.remove("password-active");
+      document.querySelectorAll(".winter-hat [data-pupils]").forEach(group => group.removeAttribute("transform"));
+    });
+    passwordInput.addEventListener("input", () => {
+      const typing = isTypingPassword();
+      welcomeScreen.classList.toggle("password-active", typing);
+      if (!typing) document.querySelectorAll(".winter-hat [data-pupils]").forEach(group => group.removeAttribute("transform"));
+    });
+    $("#passwordForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!event.currentTarget.reportValidity()) return;
+      const nickname = nicknameInput.value.trim();
+      const normalizedNickname = nickname.toLocaleLowerCase("en");
+      const encoder = new TextEncoder();
+      let accounts;
+      try {
+        if (!crypto.subtle) throw new Error("Secure password hashing is unavailable");
+        accounts = JSON.parse(localStorage.getItem(nicknameRegistryKey) || "{}");
+        if (Array.isArray(accounts)) {
+          accounts = Object.fromEntries(accounts.map(name => [name.toLocaleLowerCase("en"), null]));
+        }
+        if (!accounts || Array.isArray(accounts) || typeof accounts !== "object") {
+          throw new Error("Invalid local account list");
+        }
+        const account = accounts[normalizedNickname];
+        if (accountMode === "login") {
+          if (!account || typeof account.salt !== "string" || typeof account.passwordHash !== "string") {
+            throw new Error("Saved password verifier is missing");
+          }
+          const candidate = await crypto.subtle.digest("SHA-256", encoder.encode(`${account.salt}:${passwordInput.value}`));
+          const candidateHash = Array.from(new Uint8Array(candidate), byte => byte.toString(16).padStart(2, "0")).join("");
+          if (candidateHash !== account.passwordHash) {
+            nicknameStatus.textContent = "That password is incorrect. Enter your nickname again to try once more.";
+            nicknameStatus.dataset.state = "error";
+            $("#passwordForm").hidden = true;
+            nicknameInput.readOnly = false;
+            nicknameInput.focus();
+            $("#nicknameForm").querySelector("button[type=submit]").hidden = false;
+            passwordInput.value = "";
+            return;
+          }
+        } else {
+          if (account && account.salt && account.passwordHash) {
+            nicknameStatus.textContent = "That nickname has just been registered here. Check it again to sign in.";
+            nicknameStatus.dataset.state = "error";
+            $("#passwordForm").hidden = true;
+            nicknameInput.readOnly = false;
+            $("#nicknameForm").querySelector("button[type=submit]").hidden = false;
+            passwordInput.value = "";
+            return;
+          }
+          const saltBytes = crypto.getRandomValues(new Uint8Array(16));
+          const salt = Array.from(saltBytes, byte => byte.toString(16).padStart(2, "0")).join("");
+          const digest = await crypto.subtle.digest("SHA-256", encoder.encode(`${salt}:${passwordInput.value}`));
+          const passwordHash = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
+          accounts[normalizedNickname] = {nickname, salt, passwordHash};
+          localStorage.setItem(nicknameRegistryKey, JSON.stringify(accounts));
+        }
+        localStorage.setItem(savedNicknameKey, nickname);
+      } catch {
+        nicknameStatus.textContent = "Could not verify or save this account on this device.";
+        nicknameStatus.dataset.state = "error";
+        return;
+      }
+      passwordInput.value = "";
       $("#welcomeContent").hidden = true;
       $("#welcomeGreeting").textContent = `Hello, ${nickname}!`;
       $("#welcomeTransition").hidden = false;
@@ -829,19 +984,20 @@
       }, 1800);
     });
 
-    const pointerAvailable = matchMedia("(min-width: 721px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+    const pointerAvailable = matchMedia("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
     if (pointerAvailable.matches) {
-      const pupils = document.querySelectorAll(".winter-hat [data-pupils]");
+      const hats = document.querySelectorAll(".winter-hat");
       document.addEventListener("pointermove", event => {
-        pupils.forEach(group => {
-          const rect = group.parentElement.getBoundingClientRect();
-          const x = (event.clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
-          const y = (event.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
-          group.setAttribute("transform", `translate(${Math.max(-3, Math.min(3, x * 3))} ${Math.max(-3, Math.min(3, y * 3))})`);
+        if (welcomeScreen.hidden) return;
+        hats.forEach(hat => {
+          const rect = hat.getBoundingClientRect();
+          const x = Math.max(-1, Math.min(1, (event.clientX - (rect.left + rect.width / 2)) / (window.innerWidth / 2)));
+          const y = Math.max(-1, Math.min(1, (event.clientY - (rect.top + rect.height / 2)) / (window.innerHeight / 2)));
+          hat.querySelector("[data-pupils]").setAttribute("transform", `translate(${x * 4} ${y * 4})`);
         });
       });
     }
-    if (matchMedia("(min-width: 721px) and (hover: hover) and (pointer: fine)").matches) {
+    if (matchMedia("(hover: hover) and (pointer: fine)").matches) {
       $("#nicknameInput").focus();
     }
   </script>
