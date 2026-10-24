@@ -1,2 +1,2 @@
 # skijera-snow
-my school project
+error 404
