@@ -1205,8 +1205,10 @@
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   </div>
-
   <script>
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    if (location.hash) history.replaceState(null,"",location.pathname + location.search);
+    window.scrollTo(0,0);
     "use strict";
 
     const products = [
@@ -1651,11 +1653,10 @@
     const nicknameStatus = $("#nicknameStatus");
     const passwordInput = $("#passwordInput");
     const nicknameRegistryKey = "skijera-local-accounts";
-    const savedNicknameKey = "skijera-last-nickname";
     let accountMode = "register";
     const isTypingPassword = () => document.activeElement === passwordInput && passwordInput.value.length > 0;
     try {
-      nicknameInput.value = localStorage.getItem(savedNicknameKey) || "";
+      localStorage.removeItem("skijera-last-nickname");
     } catch {
       nicknameStatus.textContent = "Browser storage is unavailable, so nickname checking may not work.";
       nicknameStatus.dataset.state = "error";
@@ -1780,7 +1781,6 @@
           accounts[normalizedNickname] = {nickname, salt, passwordHash};
           localStorage.setItem(nicknameRegistryKey, JSON.stringify(accounts));
         }
-        localStorage.setItem(savedNicknameKey, nickname);
       } catch {
         nicknameStatus.textContent = "Could not verify or save this account on this device.";
         nicknameStatus.dataset.state = "error";
@@ -1798,11 +1798,13 @@
         shopContent.inert = false;
         shopContent.setAttribute("aria-hidden", "false");
         shopContent.classList.add("shop-entering");
+        window.scrollTo(0,0);
         window.setTimeout(() => {
           welcomeScreen.hidden = true;
           welcomeScreen.classList.remove("is-leaving");
           shopContent.classList.remove("shop-entering");
           document.body.style.overflow = "";
+          window.scrollTo(0,0);
           document.querySelector(".hero h1").focus({preventScroll:true});
         }, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 420);
       }, 1800);
@@ -1824,6 +1826,7 @@
     if (matchMedia("(hover: hover) and (pointer: fine)").matches) {
       $("#nicknameInput").focus();
     }
+    window.scrollTo(0,0);
   </script>
 </body>
 </html>
